@@ -5,6 +5,7 @@ const rl = readline.createInterface({
     output:process.stdout
 });
 
+const daysArr = ["Sunday","Monday","Tuesday","wednesday", "Thursday", "Friday", "Saturday"];
 
 class Alarm {
     constructor(day, time ){
@@ -23,14 +24,17 @@ class Alarm {
                 minutes =  minutes - 60;
                 hour += 1 
                 if(hour >= 24){
-                   hour = hour -24
+                    hour = hour -24
+                    let previousIndex = daysArr.indexOf(this.day);
+                    let index = (previousIndex + 1 )=== 7 ? 0 : previousIndex + 1
+                    this.day = daysArr[index]
                 }    
             }
             calculateTimeArr.push(hour.toString().padStart(2,"0"));
             calculateTimeArr.push(minutes.toString().padStart(2,"0"))
             this.alarmTime =  calculateTimeArr.join(":");
             this.snoozeCount++
-            console.log(`The alarm has been snooze until ${this.alarmTime}`)
+            console.log(`The alarm has been snooze until ${this.alarmTime} on ${this.day}`)
         } else{
             console.log("Maximum snooze limit reach")
         }
@@ -46,8 +50,8 @@ class AlarmClock{
         console.log(`Currunt Time: ${new Date().toTimeString()}`)
     }
 
-    addAlarm(day, time){
-        const newAlarm = new Alarm(day, time);
+    addAlarm(dayIndex, time){
+        const newAlarm = new Alarm(daysArr[dayIndex-1], time);
         this.alarms.push(newAlarm);
         console.log(`The new alarm added succussfully.`)
     }
@@ -116,10 +120,12 @@ const handleUserInput = (input) => {
 };
 
 const setAlarm = () => {
+    daysArr.forEach((item, index)=>{
+        console.log(`${index+1}.${item}`)
+    })
     rl.question('Please input the day for which the alarm has to be set:\n', (day) => {
-      rl.question('Please input the time for which the alarm has to be set (in 24 hr format HH:mm):\n', (time) => {
-        newClock.addAlarm(day, time);
-        rl.question(menu, handleUserInput);
+      rl.question('Please input the time for which the alarm has to be set (in 24 hr format HH:mm):\n', (timeInput) => {
+       handleTimeInput(timeInput, day)
       });
     });
   };
@@ -145,4 +151,21 @@ const deleteAlarm = ()=>{
         })
     }))
 
+};
+
+const handleTimeInput = (timeInput, dayParams)=>{
+    let [hour, min]= timeInput.split(":").map(Number);
+    if(0 <= hour && hour < 24 && 0 <= min && min < 60){
+
+        let time = `${hour.toString().padStart(2, "0")  }:${min.toString().padStart(2, "0")  }`
+        newClock.addAlarm(dayParams, time);
+        rl.question(menu, handleUserInput);
+    } else{
+        rl.question('Invalid Input, Please input the time for which the alarm has to be set (in 24 hr format HH:mm):\n', (input) => {
+            handleTimeInput(input, dayParams)
+           });
+    }
 }
+
+
+
