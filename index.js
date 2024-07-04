@@ -124,9 +124,7 @@ const setAlarm = () => {
         console.log(`${index+1}.${item}`)
     })
     rl.question('Please input the day for which the alarm has to be set:\n', (day) => {
-      rl.question('Please input the time for which the alarm has to be set (in 24 hr format HH:mm):\n', (timeInput) => {
-       handleTimeInput(timeInput, day)
-      });
+       handleDayInput(day)
     });
   };
 
@@ -164,6 +162,20 @@ const handleTimeInput = (timeInput, dayParams)=>{
         rl.question('Invalid Input, Please input the time for which the alarm has to be set (in 24 hr format HH:mm):\n', (input) => {
             handleTimeInput(input, dayParams)
            });
+    }
+}
+
+const handleDayInput = (day)=>{
+    if(Number(day)<8){
+
+        rl.question('Please input the time for which the alarm has to be set (in 24 hr format HH:mm):\n', (timeInput) => {
+         handleTimeInput(timeInput, day)
+        });
+    } else{
+        rl.question('Invalid Input, Please input the day for which the alarm has to be set:\n', (day) => {
+            handleDayInput(day)
+         });
+
     }
 }
 
