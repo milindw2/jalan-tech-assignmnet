@@ -34,9 +34,9 @@ class Alarm {
             calculateTimeArr.push(minutes.toString().padStart(2,"0"))
             this.alarmTime =  calculateTimeArr.join(":");
             this.snoozeCount++
-            console.log(`The alarm has been snooze until ${this.alarmTime} on ${this.day}`)
+            console.log(`The alarm has been snooze until ${this.alarmTime} on ${this.day}`);
         } else{
-            console.log("Maximum snooze limit reach")
+            console.log("Maximum snooze limit reach");
         }
     }
 }
